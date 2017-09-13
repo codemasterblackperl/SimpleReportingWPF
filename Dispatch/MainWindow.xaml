@@ -14,17 +14,17 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="Dispatch System" Height="500" Width="800" Closed="Window_Closed" Loaded="Window_Loaded">
+        Title="Dispatch System" Height="600" Width="800" Closed="Window_Closed" Loaded="Window_Loaded">
     <Window.Resources>
 
     </Window.Resources>
     <Grid>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="30*"/>
+            <RowDefinition Height="43"/>
             <!--<RowDefinition Height="61*"/>-->
-            <RowDefinition Height="40*"/>
-            <RowDefinition Height="259*"/>
+            <RowDefinition Height="57"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -140,9 +140,8 @@
                  x:Name="TxtDisplay" FontSize="14" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" Margin="5" VerticalContentAlignment="Top"/>-->
 
         <Label Content="Dispatch System Receiver" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.ColumnSpan="2" FontSize="20" Foreground="#DDFFFFFF" d:IsLocked="True"/>
-        <Button Content="Print" Grid.Column="1" HorizontalAlignment="Right" Height="35" Margin="0,10,10,0" Grid.Row="1" VerticalAlignment="Top" Width="115" Click="Button_Click" d:IsLocked="True"/>
-        <Button Content="Refresh Messages" HorizontalAlignment="Left" Height="35" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="160" d:IsLocked="True"/>
-        <Button Content="Turn Off Alarm" HorizontalAlignment="Left" Height="35" Margin="175,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="140" d:IsLocked="True" Grid.ColumnSpan="2"/>
+        <Button Content="Print" Grid.Column="1" HorizontalAlignment="Right" Height="37" Margin="0,10,10,0" Grid.Row="1" VerticalAlignment="Top" Width="140" Click="Button_Click"/>
+        <Button Content="Turn Off Alarm" HorizontalAlignment="Left" Height="37" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="140" Click="BtnTurnOffAlarm"/>
 
     </Grid>
 </Window>

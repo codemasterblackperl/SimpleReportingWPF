@@ -151,6 +151,9 @@
     <Resource Include="logo_GmB_icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="alarm.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

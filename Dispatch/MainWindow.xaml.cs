@@ -32,6 +32,8 @@ namespace Dispatch
             //LstMessages.Add(new DispatchItem { Date = DateTime.Now, Description = "Hey" });
 
             _parser = new Parser();
+
+            _wavPlayer = new System.Media.SoundPlayer("alarm.wav");
         }
 
         public FastCollection<Call> LstMessages=new FastCollection<Call>();
@@ -39,6 +41,10 @@ namespace Dispatch
         private Unit _unit;
 
         private Parser _parser;
+
+        private int _lastMessageCount;
+
+        private System.Media.SoundPlayer _wavPlayer;
         
 
         private void LstDisplay_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -58,6 +64,8 @@ namespace Dispatch
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            _lastMessageCount = 0;
+            
             try
             {
                 var unitName = System.IO.File.ReadAllText("unit.txt");
@@ -75,14 +83,9 @@ namespace Dispatch
         }
 
 
-        private void PrintDocument()
+        private void BtnTurnOffAlarm(object sender, RoutedEventArgs e)
         {
-            //PrintDialog printDialog = new PrintDialog();
-
-            //if(printDialog.ShowDialog()==true)
-            //{
-            //    printDialog.PrintDocument(((IDocumentPaginatorSource)FDR).DocumentPaginator, "Printing Report");
-            //}
+            _wavPlayer.Stop();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -103,7 +106,6 @@ namespace Dispatch
 
             report.ShowDialog();
         }
-
 
 
         private async void RefreshMessage()
@@ -140,6 +142,12 @@ namespace Dispatch
                         LstMessages.Insert(0,item);
                 }
 
+                if (LstMessages.Count > _lastMessageCount)
+                {
+                    _wavPlayer.PlayLooping();
+                    _lastMessageCount = LstMessages.Count;
+                }
+
                 LstMessages.NotificationOn();
             }
         }
@@ -150,7 +158,8 @@ namespace Dispatch
 
             if(unit.IsRequestOn)
             {
-                var msgRes = MessageBox.Show(unit.Message + "\r\nDo you wish to accept this task?", "New Task Request",
+                _wavPlayer.PlayLooping();
+                var msgRes = MessageBox.Show(this,unit.Message + "\r\nDo you wish to accept this task?", "New Task Request",
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (msgRes == MessageBoxResult.Yes)
                     SendRequest(true);
@@ -170,7 +179,7 @@ namespace Dispatch
                 MessageBox.Show(ex.Message);
             }
         }
-        
 
+        
     }
 }
