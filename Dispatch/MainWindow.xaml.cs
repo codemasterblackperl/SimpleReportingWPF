@@ -31,12 +31,15 @@ namespace Dispatch
 
             //LstMessages.Add(new DispatchItem { Date = DateTime.Now, Description = "Hey" });
 
-            
+            _parser = new Parser();
         }
 
-        //private readonly object _personCollectionLock;
+        public FastCollection<Call> LstMessages=new FastCollection<Call>();
 
-        public static ObservableCollection<Call> LstMessages=new ObservableCollection<Call>();
+        private Unit _unit;
+
+        private Parser _parser;
+        
 
         private void LstDisplay_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -53,9 +56,22 @@ namespace Dispatch
             //Application.Current.Shutdown();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
+            try
+            {
+                var unitName = System.IO.File.ReadAllText("unit.txt");
+                _unit = await _parser.GetUnitAsync(unitName);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+
+                Application.Current.Shutdown();
+            }
+
+            if (_unit != null)
+                RefreshMessage();
         }
 
 
@@ -89,6 +105,72 @@ namespace Dispatch
         }
 
 
+
+        private async void RefreshMessage()
+        {
+            int count = 0;
+            for(; ; )
+            {
+                if (count == 3)
+                {
+                    await GetCalls();
+                    count = 0;
+                    continue;
+                }
+                await CheckMessage();
+                await Task.Delay(1000 * 10);
+                count++;
+            }
+        }
+
+
+        private async Task GetCalls()
+        {
+
+            var list = await _parser.GetCallsAsync(_unit.Name);
+            
+            
+            if (list != null && list.Count > 0)
+            {
+                LstMessages.NotificationOff();
+
+                foreach (var item in list)
+                {
+                    if (!LstMessages.Contains(item))
+                        LstMessages.Insert(0,item);
+                }
+
+                LstMessages.NotificationOn();
+            }
+        }
+
+        private async Task CheckMessage()
+        {
+            var unit = await _parser.GetUnitAsync(_unit.Id);
+
+            if(unit.IsRequestOn)
+            {
+                var msgRes = MessageBox.Show(unit.Message + "\r\nDo you wish to accept this task?", "New Task Request",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (msgRes == MessageBoxResult.Yes)
+                    SendRequest(true);
+                else
+                    SendRequest(false);
+            }
+        }
+
+        private async void SendRequest(bool res)
+        {
+            try
+            {
+                await _parser.AcceptRejectRequest(new UnitAcceptRejectRequestModel { Id = _unit.Id, AcceptRequest = res });
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        
 
     }
 }

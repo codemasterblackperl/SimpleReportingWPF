@@ -28,7 +28,7 @@ namespace Dispatch
 
         public async Task<Unit> GetUnitAsync(string name)
         {
-            var content = await _client.Get(_unitUrl + "GetUnit/" + name);
+            var content = await _client.Get(_unitUrl + "GetUnitByName/" + name);
             var unit = JsonConvert.DeserializeObject<Unit>(content);
             return unit;
         }
