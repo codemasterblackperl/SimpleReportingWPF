@@ -136,7 +136,7 @@ namespace Dispatch
 
                 foreach (var item in list)
                 {
-                    if (!LstMessages.Contains(item))
+                    if (!LstMessages.Any(x=>x.Id==item.Id))
                         LstMessages.Insert(0,item);
                 }
 

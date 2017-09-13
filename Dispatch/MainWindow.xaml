@@ -47,14 +47,38 @@
                 <DataTemplate>
                     <Grid Height="110">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="40*"/>
+                            <RowDefinition Height="40*"/>
                         </Grid.RowDefinitions>
-                        <Label Content="{Binding CallReceivedTime}" HorizontalAlignment="Stretch" Margin="10,6,10,0" VerticalAlignment="Top" Grid.Row="0" Height="26"/>
-                        <TextBlock HorizontalAlignment="Stretch" 
-                           Margin="10,37,10,10" TextWrapping="Wrap" Text="{Binding EmergencyType}" VerticalAlignment="Stretch"/>
+                        <Label Content="Call Received Time: " HorizontalAlignment="Left" Margin="0,2" VerticalAlignment="Center" Width="128"/>
+                        <Label Content="{Binding CallReceivedTime}" HorizontalAlignment="Left" Margin="128,2,0,2" VerticalAlignment="Center" Width="139"/>
+                        <Label Content="Emergency Type:" HorizontalAlignment="Left" Margin="0,6" VerticalAlignment="Center" Width="117" Grid.Row="1"/>
+                        <Label Content="{Binding EmergencyType}" HorizontalAlignment="Left" Margin="117,6,0,6" VerticalAlignment="Center" Width="150" Grid.Row="1"/>
+                        <Label Content="Incident Type:" HorizontalAlignment="Left" Margin="0,6" VerticalAlignment="Center" Width="95" Grid.Row="2"/>
+                        <Label Content="{Binding IncidentType}" HorizontalAlignment="Left" Margin="95,6,0,6" VerticalAlignment="Center" Width="172" Grid.Row="2"/>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <!--<ListBoxItem Template="{DynamicResource ListBoxItemControlTemplate1}" >
+                <ListBoxItem.Resources>
+                    <ControlTemplate x:Key="ListBoxItemControlTemplate1" TargetType="{x:Type ListBoxItem}">
+                        <Grid Height="110">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30*"/>
+                                <RowDefinition Height="40*"/>
+                                <RowDefinition Height="40*"/>
+                            </Grid.RowDefinitions>
+                            <Label Content="Call Received Time: " HorizontalAlignment="Left" Margin="0,2" VerticalAlignment="Center" Width="128"/>
+                            <Label Content="{Binding CallReceivedTime}" HorizontalAlignment="Left" Margin="128,2,0,2" VerticalAlignment="Center" Width="139"/>
+                            <Label Content="Emergency Type:" HorizontalAlignment="Left" Margin="0,6" VerticalAlignment="Center" Width="117" Grid.Row="1"/>
+                            <Label Content="{Binding EmergencyType}" HorizontalAlignment="Left" Margin="117,6,0,6" VerticalAlignment="Center" Width="150" Grid.Row="1"/>
+                            <Label Content="Incident Type:" HorizontalAlignment="Left" Margin="0,6" VerticalAlignment="Center" Width="95" Grid.Row="2"/>
+                            <Label Content="{Binding IncidentType}" HorizontalAlignment="Left" Margin="95,6,0,6" VerticalAlignment="Center" Width="172" Grid.Row="2"/>
+                        </Grid>
+                    </ControlTemplate>
+                </ListBoxItem.Resources>
+            </ListBoxItem>-->
         </ListBox>
 
         <Grid x:Name="GrdDocumnet" Grid.Column="1" Grid.Row="2" d:IsLocked="True">
