@@ -55,19 +55,7 @@ namespace Dispatch
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            var call = new Call
-            {
-                AdditionalInfo = "Kidnap, Stealing, Man Handling and some other things",
-                Address = "Amanpulo, Pamalican Island, Mimaropa, 2080, Philipinas",
-                Area = "Pamlican Island",
-                CallReceivedTime = new DateTime(2017, 9, 1),
-                CallType = "Kidnap",
-                Complainant = "Ajit",
-                ContactAt = "+123 1234567890",
-                IncidentNotes = "This is very difficult situation\r\nI am walking on the road then some people came and take my purse and kicked me. And did some other things for testing purpose."
-            };
-
-            LstMessages.Add(call);
+            
         }
 
 
@@ -99,5 +87,8 @@ namespace Dispatch
 
             report.ShowDialog();
         }
+
+
+
     }
 }

@@ -28,8 +28,8 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="4.5*"/>
-            <ColumnDefinition Width="5.5*"/>
+            <ColumnDefinition Width="137*"/>
+            <ColumnDefinition Width="259*"/>
         </Grid.ColumnDefinitions>
 
         <md:ColorZone md:ShadowAssist.ShadowDepth="Depth2" Padding="10" Mode="PrimaryMid" Grid.ColumnSpan="2"
@@ -37,7 +37,7 @@
         </md:ColorZone>
 
         <ListBox x:Name="LstDisplay" Grid.Row="2" Grid.Column="0" Margin="5,5,0,5"  FontSize="14"
-                 SelectionChanged="LstDisplay_SelectionChanged" d:IsLocked="True">
+                 SelectionChanged="LstDisplay_SelectionChanged">
             <!--<ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel VerticalAlignment="Bottom"/>
@@ -51,13 +51,13 @@
                         </Grid.RowDefinitions>
                         <Label Content="{Binding CallReceivedTime}" HorizontalAlignment="Stretch" Margin="10,6,10,0" VerticalAlignment="Top" Grid.Row="0" Height="26"/>
                         <TextBlock HorizontalAlignment="Stretch" 
-                           Margin="10,37,10,10" TextWrapping="Wrap" Text="{Binding CallType}" VerticalAlignment="Stretch"/>
+                           Margin="10,37,10,10" TextWrapping="Wrap" Text="{Binding EmergencyType}" VerticalAlignment="Stretch"/>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <Grid x:Name="GrdDocumnet" Grid.Column="1" Grid.Row="2">
+        <Grid x:Name="GrdDocumnet" Grid.Column="1" Grid.Row="2" d:IsLocked="True">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
@@ -76,17 +76,17 @@
 
             <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="5" d:IsLocked="True">
                 <Label FontWeight="SemiBold" Content="Call Type:"/>
-                <Label Content="{Binding Path=CallType}"/>
+                <Label Content="{Binding Path=EmergencyType}"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="5" d:IsLocked="True">
                 <Label FontWeight="SemiBold" Content="Caller's Name:"/>
-                <Label Content="{Binding Path=Complainant}"/>
+                <Label Content="{Binding Path=CallersName}"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="5,5,5,8" Grid.Row="3" d:IsLocked="True">
                 <Label FontWeight="SemiBold" Content="Contact Number:"/>
-                <Label Content="{Binding Path=ContactAt}"/>
+                <Label Content="{Binding Path=CallersPhoneNumber}"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="5" Grid.Row="4">
@@ -96,12 +96,12 @@
 
             <StackPanel Orientation="Horizontal" Grid.Row="5" Margin="5">
                 <Label FontWeight="SemiBold" Content="Area:"/>
-                <Label Content="{Binding Path=Area}"/>
+                <Label Content="{Binding Path=City}"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Grid.Row="6" Margin="5">
                 <Label FontWeight="SemiBold" Content="Description:"/>
-                <TextBlock Text="{Binding Path=AdditionalInfo}" ScrollViewer.VerticalScrollBarVisibility="Hidden" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding Path=Description}" ScrollViewer.VerticalScrollBarVisibility="Hidden" TextWrapping="Wrap"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Grid.Row="7" Margin="5">
@@ -118,7 +118,7 @@
         <Label Content="Dispatch System Receiver" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.ColumnSpan="2" FontSize="20" Foreground="#DDFFFFFF" d:IsLocked="True"/>
         <Button Content="Print" Grid.Column="1" HorizontalAlignment="Right" Height="35" Margin="0,10,10,0" Grid.Row="1" VerticalAlignment="Top" Width="115" Click="Button_Click" d:IsLocked="True"/>
         <Button Content="Refresh Messages" HorizontalAlignment="Left" Height="35" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="160" d:IsLocked="True"/>
-        <Button Content="Turn Off Alarm" HorizontalAlignment="Left" Height="35" Margin="175,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="140" d:IsLocked="True"/>
+        <Button Content="Turn Off Alarm" HorizontalAlignment="Left" Height="35" Margin="175,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="140" d:IsLocked="True" Grid.ColumnSpan="2"/>
 
     </Grid>
 </Window>

@@ -16,14 +16,25 @@ namespace Dispatch
 
         public DateTime CallReceivedTime { get; set; }
 
-        public string Address { get; set; }
-        public string Area { get; set; }
-        public string BusinessName { get; set; }
+        public string Description { get; set; }
 
-        public string CallType { get; set; }
-        public string AdditionalInfo { get; set; }
-        public string Complainant { get; set; }
-        public string ContactAt { get; set; }
+        public string City { get; set; }
+        public string Address { get; set; }
+
+        public string CallersName { get; set; }
+        public string CallersPhoneNumber { get; set; }
+
+        public string EmergencyType { get; set; }
+        public string IncidentType { get; set; }
+        public string Incident { get; set; }
+
+        public string NoOfPeopleHurt { get; set; }
+        public string VehicleInvolved { get; set; }
+
+        public string Age { get; set; }
+        public string Gender { get; set; }
+        public string PersonBreathing { get; set; }
+        public string PersonConsciours { get; set; }
 
         public string IncidentNotes { get; set; }
 
@@ -33,28 +44,7 @@ namespace Dispatch
         public string Arived { get; set; }
         public string Finished { get; set; }
 
-        public string Disposition { get; set; }
-
         public CallStatus Status { get; set; }
-
-
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Control Number: " + ControlNumber);
-            sb.AppendLine("Entered by: " + EnteredBy);
-            sb.AppendLine("Call Received Time: " + CallReceivedTime.ToString());
-            sb.AppendLine("Address: " + Address);
-            sb.AppendLine("Area: " + Area);
-            sb.AppendLine("Business Name: " + BusinessName);
-            sb.AppendLine("Call Type: " + CallType);
-            sb.AppendLine("Additional Info: " + AdditionalInfo);
-            sb.AppendLine("Complainant: " + Complainant);
-            sb.AppendLine("Contact At: " + ContactAt);
-            sb.AppendLine("Incident Notes: " + IncidentNotes);
-
-            return sb.ToString();
-        }
     }
 
 

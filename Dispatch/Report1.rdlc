@@ -22,7 +22,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
-        <Left>1.60292in</Left>
+        <Left>2.00917in</Left>
         <Height>0.39583in</Height>
         <Width>3.51042in</Width>
         <Style>
@@ -91,7 +91,7 @@
         <Top>0.61333in</Top>
         <Left>1.99528in</Left>
         <Height>0.25in</Height>
-        <Width>4.33333in</Width>
+        <Width>1.75in</Width>
         <ZIndex>2</ZIndex>
         <Style>
           <Border>
@@ -566,10 +566,10 @@
         </Style>
       </Textbox>
     </ReportItems>
-    <Height>5.9375in</Height>
+    <Height>11.69in</Height>
     <Style />
   </Body>
-  <Width>6.5in</Width>
+  <Width>8.27in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>
