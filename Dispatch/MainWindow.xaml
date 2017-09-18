@@ -14,7 +14,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="Dispatch System" Height="600" Width="800" Closed="Window_Closed" Loaded="Window_Loaded">
+        Title="Dispatch System" Height="600" Width="900" Closed="Window_Closed" Loaded="Window_Loaded">
     <Window.Resources>
 
     </Window.Resources>
@@ -37,7 +37,7 @@
         </md:ColorZone>
 
         <ListBox x:Name="LstDisplay" Grid.Row="2" Grid.Column="0" Margin="5,5,0,5"  FontSize="14"
-                 SelectionChanged="LstDisplay_SelectionChanged">
+                 SelectionChanged="LstDisplay_SelectionChanged" MouseDoubleClick="LstDisplay_MouseDoubleClick" d:IsLocked="True">
             <!--<ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel VerticalAlignment="Bottom"/>
@@ -45,18 +45,21 @@
             </ListBox.ItemsPanel>-->
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid Height="110">
+                    <Grid Height="150">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30*"/>
                             <RowDefinition Height="40*"/>
                             <RowDefinition Height="40*"/>
+                            <RowDefinition Height="40*"/>
                         </Grid.RowDefinitions>
-                        <Label Content="Call Received Time: " HorizontalAlignment="Left" Margin="0,2" VerticalAlignment="Center" Width="128"/>
-                        <Label Content="{Binding CallReceivedTime}" HorizontalAlignment="Left" Margin="128,2,0,2" VerticalAlignment="Center" Width="139"/>
+                        <Label Content="Call Received Time: " HorizontalAlignment="Left" Margin="0,2" VerticalAlignment="Center" Width="130"/>
+                        <Label Content="{Binding CallReceivedTime}" HorizontalAlignment="Left" Margin="130,2,0,2" VerticalAlignment="Center" Width="172"/>
                         <Label Content="Emergency Type:" HorizontalAlignment="Left" Margin="0,6" VerticalAlignment="Center" Width="117" Grid.Row="1"/>
                         <Label Content="{Binding EmergencyType}" HorizontalAlignment="Left" Margin="117,6,0,6" VerticalAlignment="Center" Width="150" Grid.Row="1"/>
                         <Label Content="Incident Type:" HorizontalAlignment="Left" Margin="0,6" VerticalAlignment="Center" Width="95" Grid.Row="2"/>
                         <Label Content="{Binding IncidentType}" HorizontalAlignment="Left" Margin="95,6,0,6" VerticalAlignment="Center" Width="172" Grid.Row="2"/>
+                        <Label Content="Dispatched Time:" HorizontalAlignment="Left" Margin="0,6" VerticalAlignment="Center" Width="120" Grid.Row="3"/>
+                        <Label Content="{Binding Dispatched}" HorizontalAlignment="Left" Margin="120,6,0,6" VerticalAlignment="Center" Width="172" Grid.Row="3"/>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -81,13 +84,14 @@
             </ListBoxItem>-->
         </ListBox>
 
-        <Grid x:Name="GrdDocumnet" Grid.Column="1" Grid.Row="2" d:IsLocked="True">
+        <Grid x:Name="GrdDocumnet" Grid.Column="1" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
-                <RowDefinition Height="2*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="2*"/>
                 <RowDefinition Height="2*"/>
@@ -119,16 +123,21 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Grid.Row="5" Margin="5">
-                <Label FontWeight="SemiBold" Content="Area:"/>
-                <Label Content="{Binding Path=City}"/>
+                <Label FontWeight="SemiBold" Content="Barangay:"/>
+                <Label Content="{Binding Path=Barangay}"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Grid.Row="6" Margin="5">
+                <Label FontWeight="SemiBold" Content="Purok:"/>
+                <Label Content="{Binding Path=Purok}"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="7" Margin="5">
                 <Label FontWeight="SemiBold" Content="Description:"/>
                 <TextBlock Text="{Binding Path=Description}" ScrollViewer.VerticalScrollBarVisibility="Hidden" TextWrapping="Wrap"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Grid.Row="7" Margin="5">
+            <StackPanel Orientation="Horizontal" Grid.Row="8" Margin="5">
                 <Label FontWeight="SemiBold" Content="Incident Notes:"/>
                 <TextBlock Text="{Binding Path=IncidentNotes}" ScrollViewer.VerticalScrollBarVisibility="Hidden" TextWrapping="Wrap"/>
             </StackPanel>
@@ -140,8 +149,9 @@
                  x:Name="TxtDisplay" FontSize="14" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" Margin="5" VerticalContentAlignment="Top"/>-->
 
         <Label Content="Dispatch System Receiver" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.ColumnSpan="2" FontSize="20" Foreground="#DDFFFFFF" d:IsLocked="True"/>
-        <Button Content="Print" Grid.Column="1" HorizontalAlignment="Right" Height="37" Margin="0,10,10,0" Grid.Row="1" VerticalAlignment="Top" Width="140" Click="Button_Click"/>
-        <Button Content="Turn Off Alarm" HorizontalAlignment="Left" Height="37" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="140" Click="BtnTurnOffAlarm"/>
+        <Button Content="Print" Grid.Column="1" HorizontalAlignment="Right" Height="37" Margin="0,10,10,0" Grid.Row="1" VerticalAlignment="Top" Width="140" Click="Button_Click" d:IsLocked="True"/>
+        <Button Content="Turn Off Alarm" HorizontalAlignment="Left" Height="37" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="140" Click="BtnTurnOffAlarm" d:IsLocked="True"/>
+        <Button x:Name="BtnDispatchUnit" Content="Dispatch Unit" HorizontalAlignment="Left" Height="37" Margin="155,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="140" Click="BtnDispatchUnit_Click" Grid.ColumnSpan="2" d:IsLocked="True"/>
 
     </Grid>
 </Window>

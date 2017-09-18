@@ -32,12 +32,12 @@ namespace Dispatch
             Microsoft.Reporting.WinForms.ReportDataSource reportDataSource1 =
                 new Microsoft.Reporting.WinForms.ReportDataSource
                 {
-                    Name = "DataSet1",
+                    Name = "DatasetCall",
                     Value = new List<Call> {Cal }
                 };
 
             RV.LocalReport.DataSources.Add(reportDataSource1);
-            RV.LocalReport.ReportEmbeddedResource = "Dispatch.Report1.rdlc";
+            RV.LocalReport.ReportEmbeddedResource = "Dispatch.SingleCallReport.rdlc";
             RV.RefreshReport();
         }
     }

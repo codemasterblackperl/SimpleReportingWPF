@@ -18,7 +18,8 @@ namespace Dispatch
 
         public string Description { get; set; }
 
-        public string City { get; set; }
+        public string Barangay { get; set; }
+        public string Purok { get; set; }
         public string Address { get; set; }
 
         public string CallersName { get; set; }
@@ -44,7 +45,10 @@ namespace Dispatch
         public string Arived { get; set; }
         public string Finished { get; set; }
 
+        public double CompletionTime { get; set; }
+
         public CallStatus Status { get; set; }
+
     }
 
 

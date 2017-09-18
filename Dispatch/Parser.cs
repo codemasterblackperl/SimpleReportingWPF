@@ -9,9 +9,9 @@ namespace Dispatch
 {
     internal class Parser
     {
-        public Parser()
+        public Parser(string apiUrl)
         {
-            _client = new Client();
+            _client = new Client(apiUrl);
         }
 
         private Client _client;
@@ -55,5 +55,16 @@ namespace Dispatch
 
             var content = await _client.PostJson(_unitUrl + "AcceptOrRejectRequest", json);
         }
+
+        public async Task<Call> UpdateDispatchTime(long id)
+        {
+            var content = await _client.PostJson(_callUrl + "UpdateDispatchTime/" + id);
+
+            var call = JsonConvert.DeserializeObject<Call>(content);
+
+            return call;
+        }
+
+
     }
 }

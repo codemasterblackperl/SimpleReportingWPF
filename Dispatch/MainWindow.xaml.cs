@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,8 +31,6 @@ namespace Dispatch
             LstDisplay.ItemsSource = LstMessages;
 
             //LstMessages.Add(new DispatchItem { Date = DateTime.Now, Description = "Hey" });
-
-            _parser = new Parser();
 
             _wavPlayer = new System.Media.SoundPlayer("alarm.wav");
         }
@@ -64,6 +63,23 @@ namespace Dispatch
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            if (!File.Exists("apiset"))
+            {
+                MessageBox.Show("apiset file is missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown();
+                return;
+            }
+
+            var data = File.ReadAllText("apiset");
+            if (string.IsNullOrEmpty(data))
+            {
+                MessageBox.Show("apiset file is currpted", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown();
+                return;
+            }
+
+            _parser = new Parser(data);
+
             _lastMessageCount = 0;
             
             try
@@ -136,15 +152,21 @@ namespace Dispatch
             {
                 LstMessages.NotificationOff();
 
+                var turnAlarmOn = false;
+
                 foreach (var item in list)
                 {
-                    if (!LstMessages.Any(x=>x.Id==item.Id))
-                        LstMessages.Insert(0,item);
+                    if (!LstMessages.Any(x => x.Id == item.Id))
+                    {
+                        turnAlarmOn |= string.IsNullOrEmpty(item.Dispatched);
+                        LstMessages.Insert(0, item);
+                    }
                 }
 
                 if (LstMessages.Count > _lastMessageCount)
                 {
-                    _wavPlayer.PlayLooping();
+                    if(turnAlarmOn)
+                        _wavPlayer.PlayLooping();
                     _lastMessageCount = LstMessages.Count;
                 }
 
@@ -165,6 +187,8 @@ namespace Dispatch
                     SendRequest(true);
                 else
                     SendRequest(false);
+
+                await Task.Delay(1000 * 15);
             }
         }
 
@@ -180,6 +204,39 @@ namespace Dispatch
             }
         }
 
-        
+        private void LstDisplay_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (LstDisplay.SelectedIndex < 0)
+                return;
+
+
+        }
+
+        private async void BtnDispatchUnit_Click(object sender, RoutedEventArgs e)
+        {
+            if (LstDisplay.SelectedIndex < 0)
+            {
+                MessageBox.Show("Please select a call from list");
+                return;
+            }
+
+            var call = LstMessages[LstDisplay.SelectedIndex];
+
+            if(!string.IsNullOrEmpty(call.Dispatched))
+            {
+                MessageBox.Show("Unit already dispatched for this call.\r\nDispatched Time: " + call.Dispatched);
+                return;
+            }
+            try
+            {
+                var upcall=await _parser.UpdateDispatchTime(call.Id);
+                LstMessages[LstDisplay.SelectedIndex] = upcall;
+                LstDisplay.Items.Refresh();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }
