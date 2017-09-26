@@ -56,9 +56,11 @@ namespace Dispatch
             var content = await _client.PostJson(_unitUrl + "AcceptOrRejectRequest", json);
         }
 
-        public async Task<Call> UpdateDispatchTime(long id)
+        public async Task<Call> UpdateDispatchTime(UpdateDispacthTime model)
         {
-            var content = await _client.PostJson(_callUrl + "UpdateDispatchTime/" + id);
+            var json = JsonConvert.SerializeObject(model);
+
+            var content = await _client.PostJson(_callUrl + "UpdateDispatchTime",json);
 
             var call = JsonConvert.DeserializeObject<Call>(content);
 

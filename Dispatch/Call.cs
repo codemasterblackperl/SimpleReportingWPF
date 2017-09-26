@@ -40,6 +40,7 @@ namespace Dispatch
         public string IncidentNotes { get; set; }
 
         public string UnitAssigned { get; set; }
+        public string SubUnitAssigned { get; set; }
 
         public string Dispatched { get; set; }
         public string Arived { get; set; }
@@ -51,6 +52,12 @@ namespace Dispatch
 
     }
 
+
+    public class UpdateDispacthTime
+    {
+        public long Id { get; set; }
+        public string SubUnitAssigned { get; set; }
+    }
 
     public enum CallStatus
     {

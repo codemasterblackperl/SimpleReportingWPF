@@ -1,0 +1,6 @@
+﻿alpha
+beta
+gama
+charlie
+bravo
+omega
