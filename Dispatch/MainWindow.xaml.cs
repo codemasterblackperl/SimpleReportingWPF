@@ -97,6 +97,14 @@ namespace Dispatch
             
             try
             {
+                var units = await _parser.GetAllUnitNames();
+                if(units==null)
+                {
+                    MessageBox.Show("Server doesnt have any units yet.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Application.Current.Shutdown();
+                }
+
+
                 Logger.Log.Info("Reading units");
 
                 var unitName = System.IO.File.ReadAllText("unit.txt");
@@ -115,6 +123,8 @@ namespace Dispatch
                         "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     Application.Current.Shutdown();
                 }
+
+                LblSelectedUnit.Content ="Unit Name: "+_unit.Name;
             }
             catch(Exception ex)
             {
@@ -153,6 +163,59 @@ namespace Dispatch
             report.Owner = this;
 
             report.ShowDialog();
+        }
+
+        private void LstDisplay_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (LstDisplay.SelectedIndex < 0)
+                return;
+
+
+        }
+
+        private async void BtnDispatchUnit_Click(object sender, RoutedEventArgs e)
+        {
+            if (LstDisplay.SelectedIndex < 0)
+            {
+                MessageBox.Show("Please select a call from list");
+                return;
+            }
+
+            var call = LstMessages[LstDisplay.SelectedIndex];
+
+            if (!string.IsNullOrEmpty(call.Dispatched))
+            {
+                MessageBox.Show("Unit already dispatched for this call.\r\nDispatched Time: " + call.Dispatched);
+                return;
+            }
+            try
+            {
+
+                var subUnit = new SubUnits() { Owner = this };
+                var dlgRes = subUnit.ShowDialog();
+
+                if (dlgRes != true)
+                    return;
+
+                Logger.Log.Info("Dispatching the subunit " + subUnit.SubUnitSelected + " for callId: " + call.Id);
+
+
+                var upcall = await _parser.UpdateDispatchTime(new UpdateDispacthTime
+                {
+                    Id = call.Id,
+                    SubUnitAssigned = subUnit.SubUnitSelected
+                });
+
+                LstMessages[LstDisplay.SelectedIndex] = upcall;
+                LstDisplay.Items.Refresh();
+
+                Logger.Log.Info("Subunit dispatched successfully");
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error("Error when dispatching sub unit\r\nMessage: " + ex.Message);
+                MessageBox.Show(ex.Message);
+            }
         }
 
 
@@ -254,57 +317,6 @@ namespace Dispatch
             }
         }
 
-        private void LstDisplay_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (LstDisplay.SelectedIndex < 0)
-                return;
-
-
-        }
-
-        private async void BtnDispatchUnit_Click(object sender, RoutedEventArgs e)
-        {
-            if (LstDisplay.SelectedIndex < 0)
-            {
-                MessageBox.Show("Please select a call from list");
-                return;
-            }
-
-            var call = LstMessages[LstDisplay.SelectedIndex];
-
-            if(!string.IsNullOrEmpty(call.Dispatched))
-            {
-                MessageBox.Show("Unit already dispatched for this call.\r\nDispatched Time: " + call.Dispatched);
-                return;
-            }
-            try
-            {
-                
-                var subUnit = new SubUnits() { Owner = this };
-                var dlgRes = subUnit.ShowDialog();
-
-                if (dlgRes != true)
-                    return;
-
-                Logger.Log.Info("Dispatching the subunit " + subUnit.SubUnitSelected + " for callId: " + call.Id);
-
-
-                var upcall = await _parser.UpdateDispatchTime(new UpdateDispacthTime
-                {
-                    Id = call.Id,
-                    SubUnitAssigned = subUnit.SubUnitSelected
-                });
-
-                LstMessages[LstDisplay.SelectedIndex] = upcall;
-                LstDisplay.Items.Refresh();
-
-                Logger.Log.Info("Subunit dispatched successfully");
-            }
-            catch(Exception ex)
-            {
-                Logger.Log.Error("Error when dispatching sub unit\r\nMessage: " + ex.Message);
-                MessageBox.Show(ex.Message);
-            }
-        }
+        
     }
 }

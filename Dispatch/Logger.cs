@@ -15,14 +15,16 @@ namespace Dispatch
     {
         public static ILog Log;
 
+        public static string _AppDir;
+
         public static void Init()
         {
-            var appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Darel Dispatcher";
+            _AppDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Darel Dispatcher";
 
-            if (!Directory.Exists(appDataDir))
-                Directory.CreateDirectory(appDataDir);
+            if (!Directory.Exists(_AppDir))
+                Directory.CreateDirectory(_AppDir);
 
-            var logDir = appDataDir + "\\Logs";
+            var logDir = _AppDir + "\\Logs";
 
             if (!Directory.Exists(logDir))
                 Directory.CreateDirectory(logDir);

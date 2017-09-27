@@ -19,6 +19,20 @@ namespace Dispatch
         private readonly string _unitUrl = "api/units/";
         private readonly string _callUrl = "api/calls/";
 
+        public async Task<List<string>> GetAllUnitNames()
+        {
+            try
+            {
+                var content = await _client.Get(_unitUrl + "GetAllUnitNames");
+                var list = JsonConvert.DeserializeObject<List<string>>(content);
+                return list;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public async Task<Unit> GetUnitAsync(int id)
         {
             var content = await _client.Get(_unitUrl + "GetUnit/" + id);

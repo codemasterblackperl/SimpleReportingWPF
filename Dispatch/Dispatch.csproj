@@ -102,6 +102,9 @@
     <Compile Include="Report Viewer.xaml.cs">
       <DependentUpon>Report Viewer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SelectUnit.xaml.cs">
+      <DependentUpon>SelectUnit.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="SubUnits.xaml.cs">
       <DependentUpon>SubUnits.xaml</DependentUpon>
@@ -121,6 +124,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Report Viewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SelectUnit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
