@@ -14,7 +14,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="Dispatch System Receiver" Height="600" Width="900" Closed="Window_Closed" Loaded="Window_Loaded">
+        Title="Dispatch System Receiver" Height="600" Width="900" Closed="Window_Closed" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
     <Window.Resources>
 
     </Window.Resources>

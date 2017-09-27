@@ -73,70 +73,27 @@ namespace Dispatch
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Logger.Log.Info("Reading apiset");
-            if (!File.Exists("apiset"))
-            {
-                Logger.Log.Error("apiset is missing");
-                MessageBox.Show("apiset file is missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                Application.Current.Shutdown();
-                return;
-            }
-
-            var data = File.ReadAllText("apiset");
-            if (string.IsNullOrEmpty(data))
-            {
-                Logger.Log.Error("apiset is corrupted");
-                MessageBox.Show("apiset file is currpted", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                Application.Current.Shutdown();
-                return;
-            }
-
-            _parser = new Parser(data);
-
-            _lastMessageCount = 0;
-            
             try
             {
-                var units = await _parser.GetAllUnitNames();
-                if(units==null)
-                {
-                    MessageBox.Show("Server doesnt have any units yet.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
-                    Application.Current.Shutdown();
-                }
+                LoadApiSet();
 
+                _lastMessageCount = 0;
 
-                Logger.Log.Info("Reading units");
+                await LoadUnit();
 
-                var unitName = System.IO.File.ReadAllText("unit.txt");
+                LoadSubUnits();
 
-                _unit = await _parser.GetUnitAsync(unitName);
-
-                Logger.Log.Info("Reading subunits");
-
-                var subUnits = File.ReadAllLines("subunits.txt");
-                _SubUnits.AddRange(subUnits);
-
-                if(_SubUnits.Count==0)
-                {
-                    Logger.Log.Error("There is no subunits to dispatch.\r\nPlease add subunits before using this software.");
-                    MessageBox.Show("There is no subunits to dispatch.\r\nPlease add subunits before using this software.",
-                        "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Application.Current.Shutdown();
-                }
-
-                LblSelectedUnit.Content ="Unit Name: "+_unit.Name;
+                LblSelectedUnit.Content = "Unit Name: " + _unit.Name;
             }
             catch(Exception ex)
             {
-                Logger.Log.Error(ex);
-
-                MessageBox.Show(ex.Message);
-
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Application.Current.Shutdown();
             }
 
-            if (_unit != null)
-                RefreshMessage();
+                if (_unit != null)
+                    RefreshMessage();
+            
         }
 
 
@@ -235,6 +192,116 @@ namespace Dispatch
                 await CheckMessage();
                 await Task.Delay(1000 * 10);
                 count++;
+            }
+        }
+
+        private void LoadApiSet()
+        {
+            Logger.Log.Info("Reading apiset");
+            if (!File.Exists("apiset"))
+            {
+                Logger.Log.Error("apiset is missing");
+                //MessageBox.Show("apiset file is missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                throw new Exception("apiset file is missing");
+            }
+
+            var data = File.ReadAllText("apiset");
+            if (string.IsNullOrEmpty(data))
+            {
+                Logger.Log.Error("apiset is corrupted");
+                //MessageBox.Show("apiset file is currpted", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw new Exception("apiset file is corrupted");
+            }
+
+            _parser = new Parser(data);
+        }
+
+        private async Task LoadUnit()
+        {
+            string unitName=null;
+            if(!File.Exists(Logger._AppDir+"\\unit.txt"))
+            {
+                unitName = await GetUnit();
+            }
+            else
+            {
+                unitName = File.ReadAllText(Logger._AppDir + "\\unit.txt");
+            }
+
+            if(string.IsNullOrEmpty(unitName))
+            {
+                File.Delete(Logger._AppDir + "\\unit.txt");
+                throw new Exception("unit file is corrupted. Null error");
+            }
+
+            Logger.Log.Info("Reading units");
+
+            try
+            {
+
+                _unit = await _parser.GetUnitAsync(unitName);
+
+                if (_unit==null)
+                {
+                    //MessageBox.Show("Error when retreaving unit information", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    throw new Exception("Error when retreaving unit information");
+                }
+
+            }
+            catch(Exception ex)
+            {
+                Logger.Log.Error(ex);
+
+                throw new Exception(ex.Message);
+
+                //MessageBox.Show(ex.Message);
+            }
+
+        }
+
+        private async Task<string> GetUnit()
+        {
+            var units = await _parser.GetAllUnitNames();
+
+            if (units == null)
+            {
+                //MessageBox.Show("Server doesnt have any units yet.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                throw new Exception("Server doesnt have any units to display");
+            }
+
+            var su = new SelectUnit(units) { Owner = this };
+            var res = su.ShowDialog();
+            if (res != true)
+            {
+                throw new Exception("Null unit error");
+            }
+
+            File.WriteAllText(Logger._AppDir + "\\unit.txt", su.SelectedUnit);
+
+            return su.SelectedUnit;
+        }
+
+        private void LoadSubUnits()
+        {
+
+            if(!File.Exists("subunits.txt"))
+            {
+                //MessageBox.Show("Subunits file is missing or corrupted", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw new Exception("Subunit file is missing or corrupted");
+            }
+
+            Logger.Log.Info("Reading subunits");
+
+            var subUnits = File.ReadAllLines("subunits.txt");
+            _SubUnits.AddRange(subUnits);
+
+            if (_SubUnits.Count == 0)
+            {
+                Logger.Log.Error("There is no subunits to dispatch.\r\nPlease add subunits before using this software.");
+                //MessageBox.Show("There is no subunits to dispatch.\r\nPlease add subunits before using this software.",
+                //    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw new Exception("Subunit file is missing or corrupted");
             }
         }
 
