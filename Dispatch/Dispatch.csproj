@@ -97,6 +97,7 @@
     </ApplicationDefinition>
     <Compile Include="Client.cs" />
     <Compile Include="FastCollection.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Report Viewer.xaml.cs">
       <DependentUpon>Report Viewer.xaml</DependentUpon>
@@ -162,7 +163,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="logo_GmB_icon.ico" />

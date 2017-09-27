@@ -17,7 +17,7 @@ namespace Dispatch
             //            _baseUrl="http://darel.blackperlsolutions.com/";
             //#endif
 
-            MainWindow.Log.Info("Rest client initialized with url: " + baseUrl);
+            Logger.Log.Info("Rest client initialized with url: " + baseUrl);
 
             _client = new RestClient(baseUrl);
 
@@ -48,7 +48,7 @@ namespace Dispatch
                 //{
                 //    throw new Exception(resp.StatusDescription);
                 //}
-                MainWindow.Log.Error("Erorr for request: " + url+"\n Response: "+resp.Content);
+                Logger.Log.Error("Erorr for request: " + url+"\n Response: "+resp.Content);
                 throw new Exception(resp.Content);
             }
 
@@ -78,7 +78,7 @@ namespace Dispatch
                 //{
                 //    throw new Exception(resp.StatusDescription);
                 //}
-                MainWindow.Log.Error("Erorr for request: " + url + "\n Response: " + resp.Content);
+                Logger.Log.Error("Erorr for request: " + url + "\n Response: " + resp.Content);
                 throw new Exception(resp.Content);
             }
 
@@ -108,7 +108,7 @@ namespace Dispatch
                 //{
                 //    throw new Exception(resp.StatusDescription);
                 //}
-                MainWindow.Log.Error("Erorr for request: " + url + "\n Response: " + resp.Content);
+                Logger.Log.Error("Erorr for request: " + url + "\n Response: " + resp.Content);
                 throw new Exception(resp.Content);
             }
 

@@ -13,19 +13,19 @@
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="Select a Sub Unit" Height="300" Width="432" ShowInTaskbar="False" ResizeMode="NoResize" 
+        Title="Select a Sub Unit" Height="273" Width="439" ShowInTaskbar="False" ResizeMode="NoResize" 
         WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
-            <RowDefinition Height="168"/>
-            <RowDefinition Height="55"/>
+            <RowDefinition Height="134"/>
+            <RowDefinition Height="97"/>
         </Grid.RowDefinitions>
-        <Button Content="Cancel" HorizontalAlignment="Right" Height="35" Grid.Row="2" VerticalAlignment="Bottom" Width="100" Margin="0,0,10,10" IsCancel="True"/>
-        <Button x:Name="BtnDispatch" Content="Dispatch" HorizontalAlignment="Right" Height="35" Grid.Row="2" VerticalAlignment="Bottom" Width="100" Margin="0,0,115,10" Click="BtnDispatch_Click"/>
+        <Button Content="Cancel" HorizontalAlignment="Right" Height="35" Grid.Row="2" VerticalAlignment="Top" Width="100" Margin="0,10,10,10" IsCancel="True"/>
+        <Button x:Name="BtnDispatch" Content="Dispatch" HorizontalAlignment="Right" Height="35" Grid.Row="2" VerticalAlignment="Top" Width="100" Margin="0,10,117,10" Click="BtnDispatch_Click"/>
         <Label Content="Dispatch Unit Selected: " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="28" Width="142"/>
-        <TextBox x:Name="TxtDispatchUnit" HorizontalAlignment="Left" Height="28" Margin="157,10,10,0" VerticalAlignment="Top" Width="259" IsReadOnly="True"/>
-        <WrapPanel x:Name="WrapSubUnits" Margin="0,10" Grid.Row="1"/>
+        <TextBox x:Name="TxtDispatchUnit" HorizontalAlignment="Left" Height="28" Margin="157,10,0,0" VerticalAlignment="Top" Width="259" IsReadOnly="True"/>
+        <WrapPanel x:Name="WrapSubUnits" Margin="10" Grid.Row="1"/>
 
     </Grid>
 </Window>

@@ -1,5 +1,4 @@
-﻿using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -19,25 +18,20 @@ using System.Windows.Shapes;
 namespace Dispatch
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction Logger.Logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static readonly log4net.ILog Log = LogManager.GetLogger(
-            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        
 
         public MainWindow()
         {
-            if (System.Diagnostics.Process.GetProcessesByName(
-                System.IO.Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetEntryAssembly().Location))
-                .Length > 1)
-                System.Diagnostics.Process.GetCurrentProcess().Kill();
-
+            
             InitializeComponent();
 
             //BindingOperations.EnableCollectionSynchronization(LstMessages, _personCollectionLock);
 
-            Log.Info("Application Started");
+            Logger.Log.Info("Application Started");
 
             LstDisplay.ItemsSource = LstMessages;
 
@@ -45,7 +39,8 @@ namespace Dispatch
             
             _wavPlayer = new System.Media.SoundPlayer("alarm.wav");
 
-            Log.Info("Sound alarm initialized");
+            Logger.Log.Info("Sound alarm initialized");
+
         }
 
         public FastCollection<Call> LstMessages=new FastCollection<Call>();
@@ -78,10 +73,10 @@ namespace Dispatch
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Log.Info("Reading apiset");
+            Logger.Log.Info("Reading apiset");
             if (!File.Exists("apiset"))
             {
-                Log.Error("apiset is missing");
+                Logger.Log.Error("apiset is missing");
                 MessageBox.Show("apiset file is missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Application.Current.Shutdown();
                 return;
@@ -90,7 +85,7 @@ namespace Dispatch
             var data = File.ReadAllText("apiset");
             if (string.IsNullOrEmpty(data))
             {
-                Log.Error("apiset is corrupted");
+                Logger.Log.Error("apiset is corrupted");
                 MessageBox.Show("apiset file is currpted", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Application.Current.Shutdown();
                 return;
@@ -102,20 +97,20 @@ namespace Dispatch
             
             try
             {
-                Log.Info("Reading units");
+                Logger.Log.Info("Reading units");
 
                 var unitName = System.IO.File.ReadAllText("unit.txt");
 
                 _unit = await _parser.GetUnitAsync(unitName);
 
-                Log.Info("Reading subunits");
+                Logger.Log.Info("Reading subunits");
 
                 var subUnits = File.ReadAllLines("subunits.txt");
                 _SubUnits.AddRange(subUnits);
 
                 if(_SubUnits.Count==0)
                 {
-                    Log.Error("There is no subunits to dispatch.\r\nPlease add subunits before using this software.");
+                    Logger.Log.Error("There is no subunits to dispatch.\r\nPlease add subunits before using this software.");
                     MessageBox.Show("There is no subunits to dispatch.\r\nPlease add subunits before using this software.",
                         "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     Application.Current.Shutdown();
@@ -123,7 +118,7 @@ namespace Dispatch
             }
             catch(Exception ex)
             {
-                Log.Error(ex);
+                Logger.Log.Error(ex);
 
                 MessageBox.Show(ex.Message);
 
@@ -137,6 +132,7 @@ namespace Dispatch
 
         private void BtnTurnOffAlarm(object sender, RoutedEventArgs e)
         {
+            //new SubUnits().ShowDiaLogger.Log();
             _wavPlayer.Stop();
         }
 
@@ -182,7 +178,7 @@ namespace Dispatch
 
         private async Task GetCalls()
         {
-            Log.Info("Getting Calls for unit: "+_unit.Name);
+            Logger.Log.Info("Getting Calls for unit: "+_unit.Name);
 
             var list = await _parser.GetCallsAsync(_unit.Name);
             
@@ -216,7 +212,7 @@ namespace Dispatch
 
         private async Task CheckMessage()
         {
-            Log.Info("Checking messages for unit: "+_unit.Name);
+            Logger.Log.Info("Checking messages for unit: "+_unit.Name);
 
             var unit = await _parser.GetUnitAsync(_unit.Id);
 
@@ -224,7 +220,7 @@ namespace Dispatch
             {
                 _wavPlayer.PlayLooping();
 
-                Log.Info("New message received: \r\n" + unit.Message);
+                Logger.Log.Info("New message received: \r\n" + unit.Message);
 
                 var msgRes = MessageBox.Show(this,unit.Message + "\r\nDo you wish to accept this task?", "New Task Request",
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -245,15 +241,15 @@ namespace Dispatch
             {
                 string resp = res ? "Accepted" : "Rejected";
 
-                Log.Info(resp + " the request");
+                Logger.Log.Info(resp + " the request");
 
                 await _parser.AcceptRejectRequest(new UnitAcceptRejectRequestModel { Id = _unit.Id, AcceptRequest = res });
 
-                Log.Info("Response sent successfully");
+                Logger.Log.Info("Response sent successfully");
             }
             catch(Exception ex)
             {
-                Log.Error("Error when accepting the request\r\nMessage: " + ex.Message);
+                Logger.Log.Error("Error when accepting the request\r\nMessage: " + ex.Message);
                 MessageBox.Show(ex.Message);
             }
         }
@@ -290,7 +286,7 @@ namespace Dispatch
                 if (dlgRes != true)
                     return;
 
-                Log.Info("Dispatching the subunit " + subUnit.SubUnitSelected + " for callId: " + call.Id);
+                Logger.Log.Info("Dispatching the subunit " + subUnit.SubUnitSelected + " for callId: " + call.Id);
 
 
                 var upcall = await _parser.UpdateDispatchTime(new UpdateDispacthTime
@@ -302,11 +298,11 @@ namespace Dispatch
                 LstMessages[LstDisplay.SelectedIndex] = upcall;
                 LstDisplay.Items.Refresh();
 
-                Log.Info("Subunit dispatched successfully");
+                Logger.Log.Info("Subunit dispatched successfully");
             }
             catch(Exception ex)
             {
-                Log.Error("Error when dispatching sub unit\r\nMessage: " + ex.Message);
+                Logger.Log.Error("Error when dispatching sub unit\r\nMessage: " + ex.Message);
                 MessageBox.Show(ex.Message);
             }
         }
