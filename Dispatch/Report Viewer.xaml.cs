@@ -28,12 +28,11 @@ namespace Dispatch
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
             Microsoft.Reporting.WinForms.ReportDataSource reportDataSource1 =
                 new Microsoft.Reporting.WinForms.ReportDataSource
                 {
                     Name = "DatasetCall",
-                    Value = new List<Call> {Cal }
+                    Value = new List<Call> { Cal }
                 };
 
             RV.LocalReport.DataSources.Add(reportDataSource1);
