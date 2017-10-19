@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Dispatch"
         xmlns:rp="clr-namespace:Microsoft.Reporting.WinForms;assembly=Microsoft.ReportViewer.WinForms"
         mc:Ignorable="d"
-        Title="Report Viewer" Height="767" Width="667" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
+        Title="Report Viewer" Height="767" Width="667" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" ShowInTaskbar="False" WindowState="Maximized">
     <Grid>
         <WindowsFormsHost x:Name="Wfh">
             <rp:ReportViewer x:Name="RV"/>

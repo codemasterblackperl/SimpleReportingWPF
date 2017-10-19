@@ -37,6 +37,18 @@
     <ApplicationIcon>logo_GmB_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DataProviders, Version=4.8.5482.20885, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MajorsilenceReporting-Core.4.8\lib\net40\DataProviders.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="iTextSharp, Version=4.1.6.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca">
+      <HintPath>..\packages\iTextSharp-LGPL.4.1.6\lib\iTextSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="LibRdlWpfViewer, Version=4.12.5881.19805, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MajorsilenceReporting-WpfViewer.4.12\lib\net40\LibRdlWpfViewer.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
@@ -68,6 +80,12 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="RdlCri, Version=4.5.5482.20886, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MajorsilenceReporting-Core.4.8\lib\net40\RdlCri.dll</HintPath>
+    </Reference>
+    <Reference Include="RdlViewer, Version=4.8.5482.20886, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MajorsilenceReporting-Viewer.4.8\lib\net40\RdlViewer.dll</HintPath>
+    </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
     </Reference>
@@ -89,6 +107,9 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="zxing, Version=0.1.0.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZXing.Net.0.1.0.0\lib\net40\zxing.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -184,6 +205,8 @@
     <None Include="alarm.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Resource Include="RdlEngineConfig.xml" />
+    <Resource Include="RdlEngineConfig.Linux.xml" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
