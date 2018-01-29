@@ -50,8 +50,6 @@ namespace Dispatch
 
         public FastCollection<Call> LstMessages=new FastCollection<Call>();
 
-        private Unit _unit;
-
         private Parser _parser;
 
         private int _lastMessageCount;
@@ -195,78 +193,77 @@ namespace Dispatch
                     count = 0;
                     continue;
                 }
-                
-                await CheckMessage();
+                               
                 await Task.Delay(1000 * 10);
                 count++;
             }
         }
         
 
-        private async Task LoadUnit()
-        {
-            string unitName=null;
-            if(!File.Exists(Logger._AppDir+"\\unit.txt"))
-            {
-                unitName = await GetUnit();
-            }
-            else
-            {
-                unitName = File.ReadAllText(Logger._AppDir + "\\unit.txt");
-            }
+        //private async Task LoadUnit()
+        //{
+        //    string unitName=null;
+        //    if(!File.Exists(Logger._AppDir+"\\unit.txt"))
+        //    {
+        //        unitName = await GetUnit();
+        //    }
+        //    else
+        //    {
+        //        unitName = File.ReadAllText(Logger._AppDir + "\\unit.txt");
+        //    }
 
-            if(string.IsNullOrEmpty(unitName))
-            {
-                File.Delete(Logger._AppDir + "\\unit.txt");
-                throw new Exception("unit file is corrupted. Null error");
-            }
+        //    if(string.IsNullOrEmpty(unitName))
+        //    {
+        //        File.Delete(Logger._AppDir + "\\unit.txt");
+        //        throw new Exception("unit file is corrupted. Null error");
+        //    }
 
-            Logger.Log.Info("Reading units");
+        //    Logger.Log.Info("Reading units");
 
-            try
-            {
+        //    try
+        //    {
 
-                _unit = await _parser.GetUnitAsync(unitName);
+        //        _unit = await _parser.GetUnitAsync(unitName);
 
-                if (_unit==null)
-                {
-                    //MessageBox.Show("Error when retreaving unit information", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    throw new Exception("Error when retreaving unit information");
-                }
+        //        if (_unit==null)
+        //        {
+        //            //MessageBox.Show("Error when retreaving unit information", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        //            throw new Exception("Error when retreaving unit information");
+        //        }
 
-            }
-            catch(Exception ex)
-            {
-                Logger.Log.Error(ex);
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        Logger.Log.Error(ex);
 
-                throw new Exception(ex.Message);
+        //        throw new Exception(ex.Message);
 
-                //MessageBox.Show(ex.Message);
-            }
+        //        //MessageBox.Show(ex.Message);
+        //    }
 
-        }
+        //}
 
-        private async Task<string> GetUnit()
-        {
-            var units = await _parser.GetAllUnitNames();
+        //private async Task<string> GetUnit()
+        //{
+        //    var units = await _parser.GetAllUnitNames();
 
-            if (units == null)
-            {
-                //MessageBox.Show("Server doesnt have any units yet.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
-                throw new Exception("Server doesnt have any units to display");
-            }
+        //    if (units == null)
+        //    {
+        //        //MessageBox.Show("Server doesnt have any units yet.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+        //        throw new Exception("Server doesnt have any units to display");
+        //    }
 
-            var su = new SelectUnit(units) { Owner = this };
-            var res = su.ShowDialog();
-            if (res != true)
-            {
-                throw new Exception("Null unit error");
-            }
+        //    var su = new SelectUnit(units) { Owner = this };
+        //    var res = su.ShowDialog();
+        //    if (res != true)
+        //    {
+        //        throw new Exception("Null unit error");
+        //    }
 
-            File.WriteAllText(Logger._AppDir + "\\unit.txt", su.SelectedUnit);
+        //    File.WriteAllText(Logger._AppDir + "\\unit.txt", su.SelectedUnit);
 
-            return su.SelectedUnit;
-        }
+        //    return su.SelectedUnit;
+        //}
 
         private void LoadSubUnits()
         {
@@ -294,9 +291,9 @@ namespace Dispatch
 
         private async Task GetCalls()
         {
-            Logger.Log.Info("Getting Calls for unit: "+_unit.Name);
+            Logger.Log.Info("Getting Calls for unit: "+Shared._Unit.Name);
 
-            var list = await _parser.GetCallsAsync(_unit.Name);
+            var list = await _parser.GetCallsAsync(Shared._Unit.Name);
             
             
             
@@ -326,50 +323,6 @@ namespace Dispatch
             }
         }
 
-        private async Task CheckMessage()
-        {
-            Logger.Log.Info("Checking messages for unit: "+_unit.Name);
-
-            var unit = await _parser.GetUnitAsync(_unit.Id);
-
-            if(unit.IsRequestOn)
-            {
-                _wavPlayer.PlayLooping();
-
-                Logger.Log.Info("New message received: \r\n" + unit.Message);
-
-                var msgRes = MessageBox.Show(this,unit.Message + "\r\nDo you wish to accept this task?", "New Task Request",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (msgRes == MessageBoxResult.Yes)
-                    SendRequest(true);
-                else
-                    SendRequest(false);
-
-                _wavPlayer.Stop();
-
-                await Task.Delay(1000 * 15);
-            }
-        }
-
-        private async void SendRequest(bool res)
-        {
-            try
-            {
-                string resp = res ? "Accepted" : "Rejected";
-
-                Logger.Log.Info(resp + " the request");
-
-                await _parser.AcceptRejectRequest(new UnitAcceptRejectRequestModel { Id = _unit.Id, AcceptRequest = res });
-
-                Logger.Log.Info("Response sent successfully");
-            }
-            catch(Exception ex)
-            {
-                Logger.Log.Error("Error when accepting the request\r\nMessage: " + ex.Message);
-                MessageBox.Show(ex.Message);
-            }
-        }
-
 
         private void LoadLoginScreen()
         {
@@ -381,6 +334,8 @@ namespace Dispatch
                     Application.Current.Shutdown();
                 login.Close();
                 GrdMain.Visibility = Visibility.Visible;
+                LoadUnitDetail();
+                LoadSubUnits();
             }
             catch(Exception ex)
             {
@@ -388,6 +343,21 @@ namespace Dispatch
             }
         }
 
-        
+        private async Task LoadUnitDetail()
+        {
+            try
+            {
+                Logger.Log.Info("Getting unit details for userName: " + Shared.UserName);
+                Shared._Unit = await Shared._Parser.GetUnitAsync(Shared.UserName);
+                LblSelectedUnit.Content = Shared._Unit.Name;
+                //this.Dispatcher.Invoke(() => LblSelectedUnit.Content = Shared._Unit.Name);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error("Error when getting unit details for userName: " + Shared.UserName);
+                Logger.Log.Error("Error Message: " + ex);
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }

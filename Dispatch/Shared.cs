@@ -15,6 +15,8 @@ namespace Dispatch
 
         public static string _ApiUrl { get; set; }
 
+        public static Unit _Unit { get; set; }
+
         public static void InitApiSet()
         {
             Logger.Log.Info("Reading apiset");

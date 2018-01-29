@@ -61,9 +61,9 @@ namespace Dispatch
             return unit;
         }
 
-        public async Task<Unit> GetUnitAsync(string name)
+        public async Task<Unit> GetUnitAsync(string userName)
         {
-            var content = await _client.Get(_unitUrl + "GetUnitByName/" + name);
+            var content = await _client.Get(_unitUrl + "GetUnitByUserName/" + userName);
             var unit = JsonConvert.DeserializeObject<Unit>(content);
             return unit;
         }
@@ -82,13 +82,6 @@ namespace Dispatch
             {
                 return null;
             }
-        }
-
-        public async Task AcceptRejectRequest(UnitAcceptRejectRequestModel model)
-        {
-            var json = JsonConvert.SerializeObject(model);
-
-            var content = await _client.PostJson(_unitUrl + "AcceptOrRejectRequest", json);
         }
 
         public async Task<Call> UpdateDispatchTime(UpdateDispacthTime model)
