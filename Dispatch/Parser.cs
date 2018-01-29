@@ -16,8 +16,29 @@ namespace Dispatch
 
         private Client _client;
 
+        private string _authString = "";
+
         private readonly string _unitUrl = "api/units/";
         private readonly string _callUrl = "api/calls/";
+
+        public async Task LoginAsync(string username, string password)
+        {
+            var param = new Dictionary<string, string>
+            {
+                { "grant_type", "password" },
+                { "username", username },
+                { "password", password }
+            };
+
+            var content = await _client.PostParams("oauth/token", param);
+
+            var restResp = JsonConvert.DeserializeObject<AuthResponse>(content);
+            _authString = $"{restResp.token_type} {restResp.access_token}";
+
+            _client.SetAuth(_authString);
+
+            return;
+        }
 
         public async Task<List<string>> GetAllUnitNames()
         {
@@ -82,5 +103,12 @@ namespace Dispatch
         }
 
 
+    }
+
+    public class AuthResponse
+    {
+        public string access_token { get; set; }
+        public string token_type { get; set; }
+        public string expires_in { get; set; }
     }
 }

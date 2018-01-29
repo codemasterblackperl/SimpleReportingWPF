@@ -27,7 +27,7 @@
         </Field>
         <Field Name="Arived">
           <DataField>Arived</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="Barangay">
           <DataField>Barangay</DataField>
@@ -59,7 +59,7 @@
         </Field>
         <Field Name="Dispatched">
           <DataField>Dispatched</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="EmergencyType">
           <DataField>EmergencyType</DataField>
@@ -71,7 +71,7 @@
         </Field>
         <Field Name="Finished">
           <DataField>Finished</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="Gender">
           <DataField>Gender</DataField>

@@ -42,9 +42,9 @@ namespace Dispatch
         public string UnitAssigned { get; set; }
         public string SubUnitAssigned { get; set; }
 
-        public string Dispatched { get; set; }
-        public string Arived { get; set; }
-        public string Finished { get; set; }
+        public DateTime? Dispatched { get; set; }
+        public DateTime? Arived { get; set; }
+        public DateTime? Finished { get; set; }
 
         public double CompletionTime { get; set; }
 

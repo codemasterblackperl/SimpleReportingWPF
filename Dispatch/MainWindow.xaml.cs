@@ -41,6 +41,11 @@ namespace Dispatch
 
             Logger.Log.Info("Sound alarm initialized");
 
+            Shared.InitApiSet();
+
+            //LoadLoginScreen();
+
+
         }
 
         public FastCollection<Call> LstMessages=new FastCollection<Call>();
@@ -54,7 +59,8 @@ namespace Dispatch
         private System.Media.SoundPlayer _wavPlayer;
 
         public static List<string> _SubUnits = new List<string>();
-        
+
+        private string _authToken = "";
 
         private void LstDisplay_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -73,26 +79,27 @@ namespace Dispatch
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                LoadApiSet();
+            //try
+            //{
+            //    //LoadApiSet();
 
-                _lastMessageCount = 0;
+            //    _lastMessageCount = 0;
 
-                await LoadUnit();
+            //    //await LoadUnit();
 
-                LoadSubUnits();
+            //    LoadSubUnits();
 
-                LblSelectedUnit.Content = "Unit Name: " + _unit.Name;
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                Application.Current.Shutdown();
-            }
+            //    LblSelectedUnit.Content = "Unit Name: " + _unit.Name;
+            //}
+            //catch(Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    Application.Current.Shutdown();
+            //}
 
-                if (_unit != null)
-                    RefreshMessage();
+            //    if (_unit != null)
+            //        RefreshMessage();
+            LoadLoginScreen();
             
         }
 
@@ -140,7 +147,7 @@ namespace Dispatch
 
             var call = LstMessages[LstDisplay.SelectedIndex];
 
-            if (!string.IsNullOrEmpty(call.Dispatched))
+            if (call.Dispatched!=null)
             {
                 MessageBox.Show("Unit already dispatched for this call.\r\nDispatched Time: " + call.Dispatched);
                 return;
@@ -194,28 +201,7 @@ namespace Dispatch
                 count++;
             }
         }
-
-        private void LoadApiSet()
-        {
-            Logger.Log.Info("Reading apiset");
-            if (!File.Exists("apiset"))
-            {
-                Logger.Log.Error("apiset is missing");
-                //MessageBox.Show("apiset file is missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                throw new Exception("apiset file is missing");
-            }
-
-            var data = File.ReadAllText("apiset");
-            if (string.IsNullOrEmpty(data))
-            {
-                Logger.Log.Error("apiset is corrupted");
-                //MessageBox.Show("apiset file is currpted", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                throw new Exception("apiset file is corrupted");
-            }
-
-            _parser = new Parser(data);
-        }
+        
 
         private async Task LoadUnit()
         {
@@ -324,7 +310,7 @@ namespace Dispatch
                 {
                     if (!LstMessages.Any(x => x.Id == item.Id))
                     {
-                        turnAlarmOn |= string.IsNullOrEmpty(item.Dispatched);
+                        turnAlarmOn = item.Dispatched==null?true:false;
                         LstMessages.Insert(0, item);
                     }
                 }
@@ -381,6 +367,24 @@ namespace Dispatch
             {
                 Logger.Log.Error("Error when accepting the request\r\nMessage: " + ex.Message);
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+
+        private void LoadLoginScreen()
+        {
+            try
+            {
+                GrdMain.Visibility = Visibility.Hidden;
+                var login = new Login() { Owner = this };
+                if (login.ShowDialog() != true)
+                    Application.Current.Shutdown();
+                login.Close();
+                GrdMain.Visibility = Visibility.Visible;
+            }
+            catch(Exception ex)
+            {
+
             }
         }
 

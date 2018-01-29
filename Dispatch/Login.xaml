@@ -1,0 +1,26 @@
+﻿<Window x:Class="Dispatch.Login"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        mc:Ignorable="d"
+        Title="Sign In" Height="300" Width="660" ResizeMode="NoResize" 
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+    <Grid>
+        <Image HorizontalAlignment="Left" Height="180" Margin="10,57,0,0" VerticalAlignment="Top" Width="180" Source="Resources/logo.png"/>
+        <Label Content="Dipolog Assistance and Response Emergency Logistics" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Lucida Sans Unicode" FontSize="20"/>
+        <Label Content="Username:" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="82" Margin="205,57,0,0" FontFamily="Lucida Sans Unicode" FontSize="14"/>
+        <TextBox x:Name="TxtUserName" Height="30" Margin="205,92,10,0" TextWrapping="Wrap" VerticalAlignment="Top" TabIndex="0"/>
+        <Label Content="Password:" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="82" Margin="205,127,0,0" FontFamily="Lucida Sans Unicode" FontSize="14"/>
+        <PasswordBox x:Name="TxtPassword" Height="30" Margin="205,162,10,0" VerticalAlignment="Top" TabIndex="1"/>
+        <Button Content="Exit" HorizontalAlignment="Right" Height="40" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="120" FontFamily="Segoe UI" IsCancel="True"/>
+        <Button x:Name="BtnSignIn" Content="Sign In" HorizontalAlignment="Right" Height="40" Margin="0,0,135,10" VerticalAlignment="Bottom" Width="120" FontFamily="Segoe UI" IsDefault="True" Click="BtnSignIn_Click"/>
+    </Grid>
+</Window>
