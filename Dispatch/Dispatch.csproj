@@ -113,6 +113,7 @@
     <Compile Include="SubUnits.xaml.cs">
       <DependentUpon>SubUnits.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Team.cs" />
     <Compile Include="Unit.cs" />
     <Page Include="Login.xaml">
       <SubType>Designer</SubType>

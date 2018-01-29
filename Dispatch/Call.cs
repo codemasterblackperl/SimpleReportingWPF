@@ -39,23 +39,24 @@ namespace Dispatch
 
         public string IncidentNotes { get; set; }
 
-        public string UnitAssigned { get; set; }
-        public string SubUnitAssigned { get; set; }
+        public List<Team> UnitsAssigned { get; set; }
 
-        public DateTime? Dispatched { get; set; }
-        public DateTime? Arived { get; set; }
-        public DateTime? Finished { get; set; }
+        public bool Completed { get; set; }
 
-        public double CompletionTime { get; set; }
-
-        public CallStatus Status { get; set; }
-
+        public Call()
+        {
+            UnitsAssigned = new List<Team>();
+        }
     }
 
 
     public class UpdateDispacthTime
     {
-        public long Id { get; set; }
+        
+        public long CallId { get; set; }
+        
+        public long TeamId { get; set; }
+        
         public string SubUnitAssigned { get; set; }
     }
 

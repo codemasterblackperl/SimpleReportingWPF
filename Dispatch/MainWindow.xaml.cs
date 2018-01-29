@@ -145,9 +145,11 @@ namespace Dispatch
 
             var call = LstMessages[LstDisplay.SelectedIndex];
 
-            if (call.Dispatched!=null)
+            var team = call.UnitsAssigned.Single(x => x.UnitName == Shared._Unit.Name);
+
+            if (team.Dispatched!=null)
             {
-                MessageBox.Show("Unit already dispatched for this call.\r\nDispatched Time: " + call.Dispatched);
+                MessageBox.Show("Unit already dispatched for this call.\r\nDispatched Time: " + team.Dispatched);
                 return;
             }
             try
@@ -164,7 +166,8 @@ namespace Dispatch
 
                 var upcall = await _parser.UpdateDispatchTime(new UpdateDispacthTime
                 {
-                    Id = call.Id,
+                    CallId = call.Id,
+                    TeamId=team.Id,
                     SubUnitAssigned = subUnit.SubUnitSelected
                 });
 
@@ -307,7 +310,8 @@ namespace Dispatch
                 {
                     if (!LstMessages.Any(x => x.Id == item.Id))
                     {
-                        turnAlarmOn = item.Dispatched==null?true:false;
+                        var team= item.UnitsAssigned.Single(x => x.UnitName == Shared._Unit.Name);
+                        turnAlarmOn = team.Dispatched==null?true:false;
                         LstMessages.Insert(0, item);
                     }
                 }
