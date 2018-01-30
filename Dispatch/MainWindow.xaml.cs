@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNet.SignalR.Client;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -58,7 +60,10 @@ namespace Dispatch
 
         public static List<string> _SubUnits = new List<string>();
 
-        private string _authToken = "";
+        private HubConnection _hubConnection;
+        private IHubProxy _hubProxy;
+
+
 
         private void LstDisplay_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -137,70 +142,70 @@ namespace Dispatch
 
         private async void BtnDispatchUnit_Click(object sender, RoutedEventArgs e)
         {
-            if (LstDisplay.SelectedIndex < 0)
-            {
-                MessageBox.Show("Please select a call from list");
-                return;
-            }
+            //if (LstDisplay.SelectedIndex < 0)
+            //{
+            //    MessageBox.Show("Please select a call from list");
+            //    return;
+            //}
 
-            var call = LstMessages[LstDisplay.SelectedIndex];
+            //var call = LstMessages[LstDisplay.SelectedIndex];
 
-            var team = call.UnitsAssigned.Single(x => x.UnitName == Shared._Unit.Name);
+            //var team = call.UnitsAssigned.Single(x => x.UnitName == Shared._Unit.Name);
 
-            if (team.Dispatched!=null)
-            {
-                MessageBox.Show("Unit already dispatched for this call.\r\nDispatched Time: " + team.Dispatched);
-                return;
-            }
-            try
-            {
+            //if (team.Dispatched!=null)
+            //{
+            //    MessageBox.Show("Unit already dispatched for this call.\r\nDispatched Time: " + team.Dispatched);
+            //    return;
+            //}
+            //try
+            //{
 
-                var subUnit = new SubUnits() { Owner = this };
-                var dlgRes = subUnit.ShowDialog();
+            //    var subUnit = new SubUnits() { Owner = this };
+            //    var dlgRes = subUnit.ShowDialog();
 
-                if (dlgRes != true)
-                    return;
+            //    if (dlgRes != true)
+            //        return;
 
-                Logger.Log.Info("Dispatching the subunit " + subUnit.SubUnitSelected + " for callId: " + call.Id);
+            //    Logger.Log.Info("Dispatching the subunit " + subUnit.SubUnitSelected + " for callId: " + call.Id);
 
 
-                var upcall = await _parser.UpdateDispatchTime(new UpdateDispacthTime
-                {
-                    CallId = call.Id,
-                    TeamId=team.Id,
-                    SubUnitAssigned = subUnit.SubUnitSelected
-                });
+            //    var upcall = await Shared._Parser.UpdateDispatchTime(new UpdateDispacthTime
+            //    {
+            //        CallId = call.Id,
+            //        TeamId=team.Id,
+            //        SubUnitAssigned = subUnit.SubUnitSelected
+            //    });
 
-                LstMessages[LstDisplay.SelectedIndex] = upcall;
-                LstDisplay.Items.Refresh();
+            //    LstMessages[LstDisplay.SelectedIndex] = upcall;
+            //    LstDisplay.Items.Refresh();
 
-                Logger.Log.Info("Subunit dispatched successfully");
-            }
-            catch (Exception ex)
-            {
-                Logger.Log.Error("Error when dispatching sub unit\r\nMessage: " + ex.Message);
-                MessageBox.Show(ex.Message);
-            }
+            //    Logger.Log.Info("Subunit dispatched successfully");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.Log.Error("Error when dispatching sub unit\r\nMessage: " + ex.Message);
+            //    MessageBox.Show(ex.Message);
+            //}
         }
 
 
-        private async void RefreshMessage()
-        {
-            int count = 0;
-            for(; ; )
-            {
-                if (count == 3)
-                {
+        //private async void RefreshMessage()
+        //{
+        //    int count = 0;
+        //    for(; ; )
+        //    {
+        //        if (count == 3)
+        //        {
                     
-                    await GetCalls();
-                    count = 0;
-                    continue;
-                }
+        //            await GetCalls();
+        //            count = 0;
+        //            continue;
+        //        }
                                
-                await Task.Delay(1000 * 10);
-                count++;
-            }
-        }
+        //        await Task.Delay(1000 * 10);
+        //        count++;
+        //    }
+        //}
         
 
         //private async Task LoadUnit()
@@ -294,41 +299,54 @@ namespace Dispatch
 
         private async Task GetCalls()
         {
-            Logger.Log.Info("Getting Calls for unit: "+Shared._Unit.Name);
-
-            var list = await _parser.GetCallsAsync(Shared._Unit.Name);
-            
-            
-            
-            if (list != null && list.Count > 0)
+            try
             {
-                LstMessages.NotificationOff();
+                Logger.Log.Info("Getting Calls for unit: " + Shared._Unit.Name);
 
-                var turnAlarmOn = false;
+                var list = await Shared._Parser.GetCallsAsync(Shared._Unit.Name);
 
-                foreach (var item in list)
+
+
+                if (list != null && list.Count > 0)
                 {
-                    if (!LstMessages.Any(x => x.Id == item.Id))
+                    LstMessages.NotificationOff();
+
+                    var turnAlarmOn = false;
+
+                    foreach (var item in list)
                     {
-                        var team= item.UnitsAssigned.Single(x => x.UnitName == Shared._Unit.Name);
-                        turnAlarmOn = team.Dispatched==null?true:false;
-                        LstMessages.Insert(0, item);
+                        if (!LstMessages.Any(x => x.Id == item.Id))
+                        {
+                            var team = item.UnitsAssigned.Single(x => x.UnitName == Shared._Unit.Name);
+                            if (team == null)
+                                continue;
+                            turnAlarmOn = team.Dispatched == null ? true : false;
+                            LstMessages.Insert(0, item);
+                        }
                     }
-                }
 
-                if (LstMessages.Count > _lastMessageCount)
-                {
-                    if(turnAlarmOn)
-                        _wavPlayer.PlayLooping();
-                    _lastMessageCount = LstMessages.Count;
-                }
+                    if (LstMessages.Count > _lastMessageCount)
+                    {
+                        if (turnAlarmOn)
+                            _wavPlayer.PlayLooping();
+                        _lastMessageCount = LstMessages.Count;
+                    }
 
+                    
+                }
+            }
+            catch(Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+            finally
+            {
                 LstMessages.NotificationOn();
             }
         }
 
 
-        private void LoadLoginScreen()
+        private async void LoadLoginScreen()
         {
             try
             {
@@ -338,8 +356,10 @@ namespace Dispatch
                     Application.Current.Shutdown();
                 login.Close();
                 GrdMain.Visibility = Visibility.Visible;
-                LoadUnitDetail();
+                await LoadUnitDetail();
+                await GetCalls();
                 LoadSubUnits();
+                InitHub();
             }
             catch(Exception ex)
             {
@@ -361,6 +381,28 @@ namespace Dispatch
                 Logger.Log.Error("Error when getting unit details for userName: " + Shared.UserName);
                 Logger.Log.Error("Error Message: " + ex);
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void InitHub()
+        {
+            _hubConnection = new HubConnection(Shared._ApiUrl);
+            _hubConnection.Headers.Add("Authorization", Shared._Parser.AuthString);
+            _hubProxy = _hubConnection.CreateHubProxy("NotificationHub");
+            _hubProxy.Subscribe("Notify").Received += HubNotificationReceiver;
+            await _hubConnection.Start();
+        }
+
+        private void HubNotificationReceiver(IList<Newtonsoft.Json.Linq.JToken> obj)
+        {
+            foreach(var item in obj)
+            {
+                Call call = JsonConvert.DeserializeObject<Call>(item.ToString()); //item.ToObject<Call>();
+                Dispatcher.Invoke(() =>
+                {
+                    LstMessages.Insert(0, call);
+                    _wavPlayer.PlayLooping();
+                });
             }
         }
     }

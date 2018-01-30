@@ -18,6 +18,8 @@ namespace Dispatch
 
         private string _authString = "";
 
+        public string AuthString { get { return _authString; } }
+
         private readonly string _unitUrl = "api/units/";
         private readonly string _callUrl = "api/calls/";
 
