@@ -142,50 +142,50 @@ namespace Dispatch
 
         private async void BtnDispatchUnit_Click(object sender, RoutedEventArgs e)
         {
-            //if (LstDisplay.SelectedIndex < 0)
-            //{
-            //    MessageBox.Show("Please select a call from list");
-            //    return;
-            //}
+            if (LstDisplay.SelectedIndex < 0)
+            {
+                MessageBox.Show("Please select a call from list");
+                return;
+            }
 
-            //var call = LstMessages[LstDisplay.SelectedIndex];
+            var call = LstMessages[LstDisplay.SelectedIndex];
 
-            //var team = call.UnitsAssigned.Single(x => x.UnitName == Shared._Unit.Name);
+            var team = call.UnitsAssigned.Single(x => x.UnitName == Shared._Unit.Name);
 
-            //if (team.Dispatched!=null)
-            //{
-            //    MessageBox.Show("Unit already dispatched for this call.\r\nDispatched Time: " + team.Dispatched);
-            //    return;
-            //}
-            //try
-            //{
+            if (team.Dispatched != null)
+            {
+                MessageBox.Show("Unit already dispatched for this call.\r\nDispatched Time: " + team.Dispatched);
+                return;
+            }
+            try
+            {
 
-            //    var subUnit = new SubUnits() { Owner = this };
-            //    var dlgRes = subUnit.ShowDialog();
+                var subUnit = new SubUnits() { Owner = this };
+                var dlgRes = subUnit.ShowDialog();
 
-            //    if (dlgRes != true)
-            //        return;
+                if (dlgRes != true)
+                    return;
 
-            //    Logger.Log.Info("Dispatching the subunit " + subUnit.SubUnitSelected + " for callId: " + call.Id);
+                Logger.Log.Info("Dispatching the subunit " + subUnit.SubUnitSelected + " for callId: " + call.CallId);
 
 
-            //    var upcall = await Shared._Parser.UpdateDispatchTime(new UpdateDispacthTime
-            //    {
-            //        CallId = call.Id,
-            //        TeamId=team.Id,
-            //        SubUnitAssigned = subUnit.SubUnitSelected
-            //    });
+                var upcall = await Shared._Parser.UpdateDispatchTime(new UpdateDispacthTime
+                {
+                    CallId = call.CallId,
+                    TeamId = team.TeamId,
+                    SubUnitAssigned = subUnit.SubUnitSelected
+                });
 
-            //    LstMessages[LstDisplay.SelectedIndex] = upcall;
-            //    LstDisplay.Items.Refresh();
+                LstMessages[LstDisplay.SelectedIndex] = upcall;
+                LstDisplay.Items.Refresh();
 
-            //    Logger.Log.Info("Subunit dispatched successfully");
-            //}
-            //catch (Exception ex)
-            //{
-            //    Logger.Log.Error("Error when dispatching sub unit\r\nMessage: " + ex.Message);
-            //    MessageBox.Show(ex.Message);
-            //}
+                Logger.Log.Info("Subunit dispatched successfully");
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error("Error when dispatching sub unit\r\nMessage: " + ex.Message);
+                MessageBox.Show(ex.Message);
+            }
         }
 
 
@@ -315,7 +315,7 @@ namespace Dispatch
 
                     foreach (var item in list)
                     {
-                        if (!LstMessages.Any(x => x.Id == item.Id))
+                        if (!LstMessages.Any(x => x.CallId == item.CallId))
                         {
                             var team = item.UnitsAssigned.Single(x => x.UnitName == Shared._Unit.Name);
                             if (team == null)
@@ -363,7 +363,9 @@ namespace Dispatch
             }
             catch(Exception ex)
             {
-
+                Logger.Log.Error(ex);
+                MessageBox.Show(ex.Message);
+                Application.Current.Shutdown();
             }
         }
 
@@ -386,11 +388,13 @@ namespace Dispatch
 
         private async void InitHub()
         {
+            Logger.Log.Info("Intialzing signalr connection");
             _hubConnection = new HubConnection(Shared._ApiUrl);
             _hubConnection.Headers.Add("Authorization", Shared._Parser.AuthString);
             _hubProxy = _hubConnection.CreateHubProxy("NotificationHub");
             _hubProxy.Subscribe("Notify").Received += HubNotificationReceiver;
             await _hubConnection.Start();
+            Logger.Log.Info("signalr connection started");
         }
 
         private void HubNotificationReceiver(IList<Newtonsoft.Json.Linq.JToken> obj)

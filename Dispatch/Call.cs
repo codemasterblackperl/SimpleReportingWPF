@@ -8,7 +8,7 @@ namespace Dispatch
 {
     public class Call
     {
-        public long Id { get; set; }
+        public long CallId { get; set; }
 
         public string ControlNumber { get; set; }
 
