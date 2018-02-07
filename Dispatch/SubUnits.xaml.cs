@@ -26,15 +26,31 @@ namespace Dispatch
 
         public string SubUnitSelected { get; set; }
 
+        
+
         private void BtnDispatch_Click(object sender, RoutedEventArgs e)
         {
-            if(string.IsNullOrEmpty(TxtDispatchUnit.Text))
+            //if(string.IsNullOrEmpty(TxtDispatchUnit.Text))
+            //{
+            //    MessageBox.Show("Please select a subunit before dispatching", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            //    return;
+            //}
+            SubUnitSelected = "";
+
+            foreach(CheckBox chk in WrapSubUnits.Children)
+            {
+                if (chk.IsChecked == true)
+                    SubUnitSelected += chk.Content + ",";
+            }
+
+            SubUnitSelected.TrimEnd(',');
+
+            if (SubUnitSelected=="")
             {
                 MessageBox.Show("Please select a subunit before dispatching", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-
-            SubUnitSelected = TxtDispatchUnit.Text;
+            
             DialogResult = true;
         }
 
@@ -42,7 +58,17 @@ namespace Dispatch
         {
             foreach(var s in MainWindow._SubUnits)
             {
-                var button = new Button
+                //var button = new Button
+                //{
+                //    Content = s,
+                //    Width = 120,
+                //    Height = 30,
+                //    Margin = new Thickness(5, 5, 5, 5)
+                //};
+
+                //button.Click += ButtonSubUnitClick;
+
+                var checkBox = new CheckBox
                 {
                     Content = s,
                     Width = 120,
@@ -50,16 +76,14 @@ namespace Dispatch
                     Margin = new Thickness(5, 5, 5, 5)
                 };
 
-                button.Click += ButtonSubUnitClick;
-
-                WrapSubUnits.Children.Add(button);
+                WrapSubUnits.Children.Add(checkBox);
             }
 
         }
 
-        private void ButtonSubUnitClick(object sender, RoutedEventArgs e)
-        {
-            TxtDispatchUnit.Text = ((Button)sender).Content.ToString();
-        }
+        //private void ButtonSubUnitClick(object sender, RoutedEventArgs e)
+        //{
+        //    TxtDispatchUnit.Text = ((Button)sender).Content.ToString();
+        //}
     }
 }

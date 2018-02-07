@@ -180,6 +180,8 @@ namespace Dispatch
                 LstDisplay.Items.Refresh();
 
                 Logger.Log.Info("Subunit dispatched successfully");
+
+                MessageBox.Show("Unit successfully dispatched");
             }
             catch (Exception ex)
             {
