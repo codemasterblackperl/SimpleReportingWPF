@@ -54,6 +54,8 @@ namespace Dispatch
 
         private List<Call> _lstCalls;
 
+        private bool _callInsertlock = false;
+
         private Parser _parser;
 
         private int _lastMessageCount;
@@ -64,6 +66,9 @@ namespace Dispatch
 
         private HubConnection _hubConnection;
         private IHubProxy _hubProxy;
+
+        private object _lockObject = new object();
+        private bool _getCallOn = false;
 
 
 
@@ -133,9 +138,10 @@ namespace Dispatch
                 return;
             }
 
-            Call item = (Call)LstDisplay.SelectedItem;
+            //Call item = (Call)LstDisplay.SelectedItem;
+            var call = _lstCalls[LstDisplay.SelectedIndex];
 
-            var report = new Report_Viewer() { Cal = item };
+            var report = new Report_Viewer() { Cal = call };
 
             report.Owner = this;
 
@@ -207,6 +213,14 @@ namespace Dispatch
             }
         }
 
+        private void BtnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            if (_getCallOn)
+                return;
+
+            GetCalls();
+        }
+
 
         //private async void RefreshMessage()
         //{
@@ -215,17 +229,17 @@ namespace Dispatch
         //    {
         //        if (count == 3)
         //        {
-                    
+
         //            await GetCalls();
         //            count = 0;
         //            continue;
         //        }
-                               
+
         //        await Task.Delay(1000 * 10);
         //        count++;
         //    }
         //}
-        
+
 
         //private async Task LoadUnit()
         //{
@@ -321,10 +335,9 @@ namespace Dispatch
             try
             {
                 Logger.Log.Info("Getting Calls for unit: " + Shared._Unit.Name);
+                _getCallOn = true;
 
                 var list = await Shared._Parser.GetCallsAsync(Shared._Unit.Name);
-
-
 
                 if (list != null && list.Count > 0)
                 {
@@ -340,14 +353,20 @@ namespace Dispatch
                             if (team == null)
                                 continue;
                             turnAlarmOn = team.Dispatched == null ? true : false;
-                            _lstCalls.Insert(0, item);
-                            LstMessages.Insert(0, new CallDisplay {
-                                CallId=item.CallId,
-                                CallReceivedTime=item.CallReceivedTime,
-                                EmergencyType=item.EmergencyType,
-                                IncidentType=item.IncidentType,
-                                DispatchedTime=team.Dispatched
-                            });
+                            if (_callInsertlock)
+                                break;
+                            lock (_lockObject)
+                            {
+                                _lstCalls.Insert(0, item);
+                                LstMessages.Insert(0, new CallDisplay
+                                {
+                                    CallId = item.CallId,
+                                    CallReceivedTime = item.CallReceivedTime,
+                                    EmergencyType = item.EmergencyType,
+                                    IncidentType = item.IncidentType,
+                                    DispatchedTime = team.Dispatched
+                                });
+                            }
                         }
                     }
 
@@ -367,6 +386,7 @@ namespace Dispatch
             }
             finally
             {
+                _getCallOn = false;
                 LstMessages.NotificationOn();
             }
         }
@@ -425,22 +445,40 @@ namespace Dispatch
 
         private void HubNotificationReceiver(IList<Newtonsoft.Json.Linq.JToken> obj)
         {
-            foreach(var item in obj)
+            _callInsertlock = true;
+            try
             {
-                Call call = JsonConvert.DeserializeObject<Call>(item.ToString()); //item.ToObject<Call>();
-                Dispatcher.Invoke(() =>
+                foreach (var item in obj)
                 {
-                    _lstCalls.Insert(0, call);
-                    LstMessages.Insert(0, new CallDisplay
+                    Call call = JsonConvert.DeserializeObject<Call>(item.ToString()); //item.ToObject<Call>();
+                    Dispatcher.Invoke(() =>
                     {
-                        CallId = call.CallId,
-                        CallReceivedTime = call.CallReceivedTime,
-                        EmergencyType = call.EmergencyType,
-                        IncidentType = call.IncidentType,
+                        lock (_lockObject)
+                        {
+                            _lstCalls.Insert(0, call);
+                            LstMessages.Insert(0, new CallDisplay
+                            {
+                                CallId = call.CallId,
+                                CallReceivedTime = call.CallReceivedTime,
+                                EmergencyType = call.EmergencyType,
+                                IncidentType = call.IncidentType,
+                            });
+                        }
+                        _wavPlayer.PlayLooping();
                     });
-                    _wavPlayer.PlayLooping();
-                });
+                }
+            }
+            catch(Exception ex)
+            {
+                Logger.Log.Error("Error when inserting an item into list\r\n"+obj);
+                Logger.Log.Error(ex);
+            }
+            finally
+            {
+                _callInsertlock = false;
             }
         }
+
+       
     }
 }

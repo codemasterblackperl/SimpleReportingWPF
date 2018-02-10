@@ -150,7 +150,8 @@
         <Label x:Name="LblSelectedUnit" Content="Dispatch System Receiver" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.ColumnSpan="2" FontSize="20" Foreground="#DDFFFFFF"/>
         <Button Content="Print" Grid.Column="1" HorizontalAlignment="Right" Height="37" Margin="0,10,10,0" Grid.Row="1" VerticalAlignment="Top" Width="140" Click="Button_Click" d:IsLocked="True"/>
         <Button Content="Turn Off Alarm" HorizontalAlignment="Left" Height="37" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="140" Click="BtnTurnOffAlarm" d:IsLocked="True"/>
-        <Button x:Name="BtnDispatchUnit" Content="Dispatch Unit" HorizontalAlignment="Left" Height="37" Margin="155,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="140" Click="BtnDispatchUnit_Click" Grid.ColumnSpan="2" d:IsLocked="True"/>
+        <Button x:Name="BtnDispatchUnit" Content="Dispatch Unit" HorizontalAlignment="Left" Height="37" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="140" Click="BtnDispatchUnit_Click" Grid.Column="1"/>
+        <Button x:Name="BtnRefresh" Content="Refresh" HorizontalAlignment="Left" Margin="159,10,0,0" VerticalAlignment="Top" Width="140" Grid.Row="1" Height="37" Click="BtnRefresh_Click"/>
 
     </Grid>
 </Window>
