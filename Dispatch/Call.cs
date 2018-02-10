@@ -67,4 +67,13 @@ namespace Dispatch
         On_Scene = 2,
         Finished = 3
     }
+
+    public class CallDisplay
+    {
+        public long CallId { get; set; }
+        public DateTime CallReceivedTime { get; set; }
+        public string EmergencyType { get; set; }
+        public string IncidentType { get; set; }
+        public DateTime? DispatchedTime { get; set; }
+    }
 }

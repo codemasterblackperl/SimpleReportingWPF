@@ -47,10 +47,12 @@ namespace Dispatch
 
             //LoadLoginScreen();
 
-
+            _lstCalls = new List<Call>();
         }
 
-        public FastCollection<Call> LstMessages=new FastCollection<Call>();
+        public FastCollection<CallDisplay> LstMessages=new FastCollection<CallDisplay>();
+
+        private List<Call> _lstCalls;
 
         private Parser _parser;
 
@@ -69,8 +71,16 @@ namespace Dispatch
         {
             if (LstDisplay.SelectedIndex< 0)
                 return;
-            Call item = (Call) LstDisplay.SelectedItem;
-            GrdDocumnet.DataContext = item;
+            CallDisplay item = (CallDisplay) LstDisplay.SelectedItem;
+            try
+            {
+                var call = _lstCalls.Single(x => x.CallId == item.CallId);
+                GrdDocumnet.DataContext = call;
+            }
+            catch
+            {
+                GrdDocumnet.DataContext = null;
+            }
             //TxtDisplay.Text=item.ToString();
         }
         
@@ -148,7 +158,10 @@ namespace Dispatch
                 return;
             }
 
-            var call = LstMessages[LstDisplay.SelectedIndex];
+            //var callD = LstMessages[LstDisplay.SelectedIndex];
+
+            //var call = _lstCalls.Single(x => x.CallId == callD.CallId);
+            var call = _lstCalls[LstDisplay.SelectedIndex];
 
             var team = call.UnitsAssigned.Single(x => x.UnitName == Shared._Unit.Name);
 
@@ -176,7 +189,11 @@ namespace Dispatch
                     SubUnitAssigned = subUnit.SubUnitSelected
                 });
 
-                LstMessages[LstDisplay.SelectedIndex] = upcall;
+                _lstCalls[LstDisplay.SelectedIndex] = upcall;
+
+                var tt = upcall.UnitsAssigned.Single(x => x.TeamId == team.TeamId);
+
+                LstMessages[LstDisplay.SelectedIndex].DispatchedTime = tt.Dispatched;
                 LstDisplay.Items.Refresh();
 
                 Logger.Log.Info("Subunit dispatched successfully");
@@ -323,7 +340,14 @@ namespace Dispatch
                             if (team == null)
                                 continue;
                             turnAlarmOn = team.Dispatched == null ? true : false;
-                            LstMessages.Insert(0, item);
+                            _lstCalls.Insert(0, item);
+                            LstMessages.Insert(0, new CallDisplay {
+                                CallId=item.CallId,
+                                CallReceivedTime=item.CallReceivedTime,
+                                EmergencyType=item.EmergencyType,
+                                IncidentType=item.IncidentType,
+                                DispatchedTime=team.Dispatched
+                            });
                         }
                     }
 
@@ -406,7 +430,14 @@ namespace Dispatch
                 Call call = JsonConvert.DeserializeObject<Call>(item.ToString()); //item.ToObject<Call>();
                 Dispatcher.Invoke(() =>
                 {
-                    LstMessages.Insert(0, call);
+                    _lstCalls.Insert(0, call);
+                    LstMessages.Insert(0, new CallDisplay
+                    {
+                        CallId = call.CallId,
+                        CallReceivedTime = call.CallReceivedTime,
+                        EmergencyType = call.EmergencyType,
+                        IncidentType = call.IncidentType,
+                    });
                     _wavPlayer.PlayLooping();
                 });
             }

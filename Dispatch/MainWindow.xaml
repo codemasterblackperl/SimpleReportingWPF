@@ -44,12 +44,12 @@
             </ListBox.ItemsPanel>-->
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid Height="110">
+                    <Grid Height="150">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30*"/>
                             <RowDefinition Height="40*"/>
                             <RowDefinition Height="40*"/>
-                            <!--<RowDefinition Height="40*"/>-->
+                            <RowDefinition Height="40*"/>
                         </Grid.RowDefinitions>
                         <Label Content="Call Received Time: " HorizontalAlignment="Left" Margin="0,2" VerticalAlignment="Center" Width="130"/>
                         <Label Content="{Binding CallReceivedTime}" HorizontalAlignment="Left" Margin="130,2,0,2" VerticalAlignment="Center" Width="172"/>
@@ -57,8 +57,8 @@
                         <Label Content="{Binding EmergencyType}" HorizontalAlignment="Left" Margin="117,6,0,6" VerticalAlignment="Center" Width="150" Grid.Row="1"/>
                         <Label Content="Incident Type:" HorizontalAlignment="Left" Margin="0,6" VerticalAlignment="Center" Width="95" Grid.Row="2"/>
                         <Label Content="{Binding IncidentType}" HorizontalAlignment="Left" Margin="95,6,0,6" VerticalAlignment="Center" Width="172" Grid.Row="2"/>
-                        <!--<Label Content="Dispatched Time:" HorizontalAlignment="Left" Margin="0,6" VerticalAlignment="Center" Width="120" Grid.Row="3"/>-->
-                        <!--<Label Content="{Binding UnitsAssigned.Dispatched}" HorizontalAlignment="Left" Margin="120,6,0,6" VerticalAlignment="Center" Width="172" Grid.Row="3"/>-->
+                        <Label Content="Dispatched Time:" HorizontalAlignment="Left" Margin="0,6" VerticalAlignment="Center" Width="120" Grid.Row="3"/>
+                        <Label Content="{Binding DispatchedTime}" HorizontalAlignment="Left" Margin="120,6,0,6" VerticalAlignment="Center" Width="172" Grid.Row="3"/>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
